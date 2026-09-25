@@ -1,0 +1,72 @@
+"""测试共享的样例台账与应用装配。"""
+
+from __future__ import annotations
+
+import tempfile
+
+from county_network_ledger.application.services import Application
+from county_network_ledger.ports.clock import FixedClock
+
+FIXED_TIME = "2026-04-01T09:00:00+00:00"
+
+
+def sample_ledger() -> dict:
+    """与 examples/ledger_2026.json 对应的样例台账，每次调用返回全新副本。"""
+    return {
+        "ledger_id": "hx-2026",
+        "name": "湖西县通信共建台账",
+        "grids": [
+            {"id": "G01", "name": "城关中心", "population": 8200, "industries": ["政务", "商贸"]},
+            {"id": "G02", "name": "城东社区", "population": 5400, "industries": ["商贸"]},
+            {"id": "G03", "name": "经开区一期", "population": 3100, "industries": ["制造", "物流"]},
+            {"id": "G04", "name": "经开区二期", "population": 2600, "industries": ["制造"]},
+            {"id": "G05", "name": "滨江文旅村", "population": 1800, "industries": ["旅游"]},
+            {"id": "G06", "name": "茶产业园区", "population": 1500, "industries": ["农业", "电商"]},
+            {"id": "G07", "name": "高山村", "population": 620, "industries": ["农业"]},
+            {"id": "G08", "name": "石门村", "population": 480, "industries": ["农业"]},
+            {"id": "G09", "name": "云雾村", "population": 260, "industries": []},
+            {"id": "G10", "name": "林场管护站", "population": 120, "industries": []},
+            {"id": "G11", "name": "古镇景区", "population": 2100, "industries": ["旅游", "商贸"]},
+            {"id": "G12", "name": "移民安置区", "population": 900, "industries": ["政务"]},
+        ],
+        "capabilities": [
+            {"id": "CAP01", "kind": "site", "covers": ["G01", "G02"], "since": "2024Q1", "om_annual": 3.0},
+            {"id": "CAP02", "kind": "fiber", "covers": ["G03"], "since": "2025Q2", "om_annual": 1.5},
+        ],
+        "projects": [
+            {"id": "P01", "proposer": "运营商A", "kind": "fiber", "covers": ["G03", "G04"],
+             "capex": 60, "om_annual": 1.2, "declared_quarter": "2026Q1", "planned_quarter": "2026Q2"},
+            {"id": "P02", "proposer": "园区管委会", "kind": "fiber", "covers": ["G04"],
+             "capex": 45, "om_annual": 1.0, "declared_quarter": "2026Q2", "planned_quarter": "2026Q2"},
+            {"id": "P03", "proposer": "运营商B", "kind": "site", "covers": ["G05", "G11"],
+             "capex": 90, "om_annual": 2.4, "declared_quarter": "2026Q1", "planned_quarter": "2026Q2"},
+            {"id": "P04", "proposer": "高山乡镇", "kind": "fiber", "covers": ["G06", "G07"],
+             "capex": 55, "om_annual": 1.5, "declared_quarter": "2026Q2", "planned_quarter": "2026Q3",
+             "depends_on": ["P06"]},
+            {"id": "P05", "proposer": "运营商A", "kind": "site", "covers": ["G07", "G08"],
+             "capex": 70, "om_annual": 2.0, "declared_quarter": "2026Q2", "planned_quarter": "2026Q3"},
+            {"id": "P06", "proposer": "运营商B", "kind": "fiber", "covers": ["G06"],
+             "capex": 30, "om_annual": 0.8, "declared_quarter": "2026Q1", "planned_quarter": "2026Q2"},
+            {"id": "P07", "proposer": "云雾乡镇", "kind": "site", "covers": ["G09"],
+             "capex": 65, "om_annual": 2.2, "declared_quarter": "2026Q2", "planned_quarter": "2026Q3"},
+            {"id": "P08", "proposer": "运营商A", "kind": "fiber", "covers": ["G11", "G12"],
+             "capex": 40, "om_annual": 1.0, "declared_quarter": "2026Q2", "planned_quarter": "2026Q2"},
+        ],
+        "budgets": [
+            {"id": "B2026Q2", "name": "2026年二季度建设资金", "quarter": "2026Q2", "total": 200},
+            {"id": "B2026Q3", "name": "2026年三季度建设资金", "quarter": "2026Q3", "total": 120},
+        ],
+        "commitments": [
+            {"id": "C01", "project": "P03", "partner": "运营商B", "signed_quarter": "2026Q1",
+             "note": "共建共享意向书"},
+        ],
+    }
+
+
+def make_app(tmpdir: str | None = None) -> Application:
+    """在临时目录装配应用并导入样例台账，使用固定时钟。"""
+    if tmpdir is None:
+        tmpdir = tempfile.mkdtemp(prefix="cnl-test-")
+    app = Application(tmpdir, clock=FixedClock(FIXED_TIME))
+    app.import_ledger(sample_ledger())
+    return app
