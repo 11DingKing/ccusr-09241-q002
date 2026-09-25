@@ -10,3 +10,7 @@ coverage/
 __pycache__/
 *.py[cod]
 .DS_Store
+var/
+*.jsonl
+*.jsonl.lock
+*.jsonl.tmp

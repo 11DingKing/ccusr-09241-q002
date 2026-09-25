@@ -1,0 +1,63 @@
+{
+  "grids": [
+    {"id": "G-01", "name": "城关东片区", "population": 12000, "x0": 0.0, "y0": 0.0, "x1": 2.0, "y1": 2.0},
+    {"id": "G-02", "name": "县产业园", "population": 3200, "x0": 2.0, "y0": 0.0, "x1": 4.0, "y1": 2.0, "industry": "茶叶精深加工"},
+    {"id": "G-03", "name": "河西村", "population": 1800, "x0": 0.0, "y0": 2.0, "x1": 2.0, "y1": 4.0, "blank": true},
+    {"id": "G-04", "name": "高山村", "population": 620, "x0": 4.0, "y0": 4.0, "x1": 6.0, "y1": 6.0, "blank": true},
+    {"id": "G-05", "name": "南山村", "population": 960, "x0": 2.0, "y0": 2.0, "x1": 4.0, "y1": 4.0},
+    {"id": "G-06", "name": "柳坪村", "population": 740, "x0": 0.0, "y0": 4.0, "x1": 2.0, "y1": 6.0, "blank": true}
+  ],
+  "capabilities": [
+    {"id": "E-01", "grid_id": "G-01", "kind": "4G", "operator": "电信"},
+    {"id": "E-02", "grid_id": "G-01", "kind": "光纤", "operator": "电信"},
+    {"id": "E-03", "grid_id": "G-02", "kind": "4G", "operator": "移动"},
+    {"id": "E-04", "grid_id": "G-05", "kind": "2G/3G", "operator": "移动"}
+  ],
+  "budgets": [
+    {"id": "B-2026-TB", "name": "2026年普遍服务补助", "amount": 8000000, "quarter": 0},
+    {"id": "B-2026-CY", "name": "2026年产业园区专项", "amount": 3000000, "quarter": 0},
+    {"id": "B-2027-XJ", "name": "2027年续建资金", "amount": 4000000, "quarter": 4}
+  ],
+  "projects": [
+    {"id": "P-01", "name": "河西村4G基站（电信申报）", "kind": "4G站点", "covers": ["G-03"],
+     "budget_id": "B-2026-TB", "cost": 900000, "annual_maintenance": 36000,
+     "start_q": 0, "end_q": 1, "revenue": 88000, "proposer": "电信"},
+    {"id": "P-02", "name": "河西村4G基站（移动重复申报）", "kind": "4G站点", "covers": ["G-03"],
+     "budget_id": "B-2026-TB", "cost": 920000, "annual_maintenance": 37000,
+     "start_q": 0, "end_q": 2, "revenue": 82000, "proposer": "移动"},
+    {"id": "P-03", "name": "产业园5G专网基站", "kind": "5G站点", "covers": ["G-02"],
+     "budget_id": "B-2026-CY", "cost": 1200000, "annual_maintenance": 60000,
+     "start_q": 1, "end_q": 2, "revenue": 260000, "proposer": "园区管委会"},
+    {"id": "P-04", "name": "南山村4G基站", "kind": "4G站点", "covers": ["G-05"],
+     "budget_id": "B-2026-TB", "cost": 700000, "annual_maintenance": 28000,
+     "start_q": 0, "end_q": 1, "revenue": 61000, "proposer": "移动"},
+    {"id": "P-05", "name": "高山村4G基站（低收益偏远）", "kind": "4G站点", "covers": ["G-04"],
+     "budget_id": "B-2026-TB", "cost": 950000, "annual_maintenance": 34000,
+     "start_q": 2, "end_q": 3, "revenue": 12000, "proposer": "电信"},
+    {"id": "P-06", "name": "河西-南山入乡光纤主干", "kind": "光纤", "covers": ["G-03", "G-05"],
+     "budget_id": "B-2026-TB", "cost": 1500000, "annual_maintenance": 45000,
+     "start_q": 0, "end_q": 1, "revenue": 130000,
+     "shared_with": ["广电"], "proposer": "电信"},
+    {"id": "P-07", "name": "高山村光纤延伸段", "kind": "光纤延伸", "covers": ["G-04"],
+     "budget_id": "B-2027-XJ", "cost": 800000, "annual_maintenance": 22000,
+     "start_q": 4, "end_q": 5, "revenue": 18000, "deps": ["P-06"], "proposer": "电信"},
+    {"id": "P-08", "name": "柳坪村4G基站", "kind": "4G站点", "covers": ["G-06"],
+     "budget_id": "B-2026-TB", "cost": 880000, "annual_maintenance": 31000,
+     "start_q": 1, "end_q": 2, "revenue": 40000, "proposer": "乡镇政府"},
+    {"id": "P-09", "name": "柳坪村入村光纤", "kind": "光纤", "covers": ["G-06"],
+     "budget_id": "B-2026-TB", "cost": 600000, "annual_maintenance": 18000,
+     "start_q": 1, "end_q": 2, "revenue": 35000, "proposer": "广电"},
+    {"id": "P-10", "name": "高山光纤延伸（抢跑方案，时序违例）", "kind": "光纤延伸", "covers": ["G-04"],
+     "budget_id": "B-2026-TB", "cost": 830000, "annual_maintenance": 23000,
+     "start_q": 0, "end_q": 0, "revenue": 18000, "deps": ["P-06"], "proposer": "乡镇政府"},
+    {"id": "P-11", "name": "城关4G（与存量重复申报）", "kind": "4G站点", "covers": ["G-01"],
+     "budget_id": "B-2026-TB", "cost": 500000, "annual_maintenance": 20000,
+     "start_q": 0, "end_q": 1, "revenue": 150000, "proposer": "联通"}
+  ],
+  "commitments": [
+    {"id": "C-01", "project_id": "P-06", "party": "电信", "shared_by": "广电",
+     "share": 0.4, "signed_q": 0},
+    {"id": "C-02", "project_id": "P-03", "party": "移动", "shared_by": "园区管委会",
+     "share": 0.3, "signed_q": 1}
+  ]
+}
